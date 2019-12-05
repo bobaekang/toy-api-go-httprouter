@@ -5,7 +5,10 @@ import "github.com/julienschmidt/httprouter"
 func NewRouter(routes Routes) *httprouter.Router {
 	router := httprouter.New()
 	for _, route := range routes {
-		router.Handle(route.Method, route.Path, route.HandlerFunc)
+		var handle httprouter.Handle
+		handle = Logger(route.HandlerFunc)
+
+		router.Handle(route.Method, route.Path, handle)
 	}
 
 	return router
