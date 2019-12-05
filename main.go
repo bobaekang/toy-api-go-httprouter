@@ -4,12 +4,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello, World!")
-	})
+	router := httprouter.New()
+	router.GET("/", Index)
+	
+	log.Fatal(http.ListenAndServe(":8080", router))
+}
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fmt.Fprintln(w, "Hello, World!")
 }
