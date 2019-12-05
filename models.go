@@ -1,14 +1,14 @@
 package main
 
 type ArrestsAllOne struct {
-	year  int
-	value int
+	Year  int `json:"year"`
+	Value int `json:"value"`
 }
 
 type ArrestsByOffenseClassOne struct {
-	year         int
-	offenseclass int
-	value        int
+	Year         int `json:"year"`
+	OffenseClass int `json:"offenseclass"`
+	Value        int `json:"value"`
 }
 
 type ArrestsAll []ArrestsAllOne
