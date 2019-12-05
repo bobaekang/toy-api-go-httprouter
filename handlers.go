@@ -13,7 +13,6 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func ArrestsIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprintln(w, "Arrests all")
 	data := ArrestsAll{
 		ArrestsAllOne{Year: 2017, Value: 1820},
 		ArrestsAllOne{Year: 2018, Value: 1795},
@@ -22,7 +21,6 @@ func ArrestsIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func ArrestsByOffenseClassPath(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprintln(w, "Arrests by offense class")
 	data := ArrestsByOffenseClass{
 		ArrestsByOffenseClassOne{Year: 2017, OffenseClass: 0, Value: 162},
 		ArrestsByOffenseClassOne{Year: 2017, OffenseClass: 1, Value: 1277},
