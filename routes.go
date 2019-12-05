@@ -10,29 +10,24 @@ type Route struct {
 
 type Routes []Route
 
-func NewRouter() *httprouter.Router {
-	router := httprouter.New()
-	for _, route := range routes {
-		router.Handle(route.Method, route.Path, route.Handle)
+func AllRoutes() Routes {
+	routes := Routes{
+		Route{
+			"GET",
+			"/",
+			Index,
+		},
+		Route{
+			"GET",
+			"/arrests",
+			ArrestsIndex,
+		},
+		Route{
+			"GET",
+			"/arrests/by-offense-class",
+			ArrestsByOffenseClassPath,
+		},
 	}
 
-	return router
-}
-
-var routes = Routes{
-	Route{
-		"GET",
-		"/",
-		Index,
-	},
-	Route{
-		"GET",
-		"/arrests",
-		ArrestsIndex,
-	},
-	Route{
-		"GET",
-		"/arrests/by-offense-class",
-		ArrestsByOffenseClassPath,
-	},
+	return routes
 }
