@@ -1,15 +1,15 @@
 package main
 
-type JsonResponse struct {
+type JSONResponse struct {
 	Meta interface{} `json:"meta"`
 	Data interface{} `json:"data"`
 }
 
-type JsonErrorResponse struct {
-	Error *ApiError `json:"error"`
+type JSONErrorResponse struct {
+	Error *APIError `json:"error"`
 }
 
-type ApiError struct {
+type APIError struct {
 	Status int    `json:"status"`
 	Title  string `json:"title"`
 }
