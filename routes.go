@@ -9,29 +9,25 @@ type Route struct {
 	HandlerFunc httprouter.Handle
 }
 
-type Routes []Route
-
-func AllRoutes() Routes {
-	routes := Routes{
-		Route{
+func AllRoutes() []Route {
+	return []Route{
+		{
 			"Index",
 			"GET",
 			"/",
 			Index,
 		},
-		Route{
+		{
 			"ArrestsIndex",
 			"GET",
 			"/arrests",
 			ArrestsIndex,
 		},
-		Route{
+		{
 			"ArrestsByOffenseClassPath",
 			"GET",
 			"/arrests/by-offense-class",
 			ArrestsByOffenseClassPath,
 		},
 	}
-
-	return routes
 }
