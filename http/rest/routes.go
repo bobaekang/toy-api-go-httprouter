@@ -9,7 +9,7 @@ type Route struct {
 	HandlerFunc httprouter.Handle
 }
 
-func AllRoutes() []Route {
+func allRoutes() []Route {
 	return []Route{
 		{
 			"Index",

@@ -2,8 +2,9 @@ package rest
 
 import "github.com/julienschmidt/httprouter"
 
-func NewRouter(routes ...Route) *httprouter.Router {
+func NewRouter() *httprouter.Router {
 	router := httprouter.New()
+	routes := allRoutes()
 	for _, r := range routes {
 		var handle httprouter.Handle
 		handle = Logger(r.HandlerFunc)

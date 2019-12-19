@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	routes := rest.AllRoutes()
-	router := rest.NewRouter(routes...)
+	router := rest.NewRouter()
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
