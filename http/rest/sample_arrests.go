@@ -1,4 +1,4 @@
-package main
+package rest
 
 import "github.com/bobaekang/toy-api-go-httprouter/model"
 

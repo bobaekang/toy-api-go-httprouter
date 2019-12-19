@@ -1,4 +1,4 @@
-package main
+package rest
 
 type JSONResponse struct {
 	Meta interface{} `json:"meta"`
