@@ -1,4 +1,4 @@
-package main
+package model
 
 type ArrestsAll struct {
 	Year  int `json:"year"`

@@ -1,6 +1,8 @@
 package main
 
-var SampleDataArrestsAll = []ArrestsAll{
+import "github.com/bobaekang/toy-api-go-httprouter/model"
+
+var SampleDataArrestsAll = []model.ArrestsAll{
 	{
 		Year:  2017,
 		Value: 1820,
@@ -11,7 +13,7 @@ var SampleDataArrestsAll = []ArrestsAll{
 	},
 }
 
-var SampleDataArrestsByOffenseClass = []ArrestsByOffenseClass{
+var SampleDataArrestsByOffenseClass = []model.ArrestsByOffenseClass{
 	{
 		Year:         2017,
 		OffenseClass: 0,
