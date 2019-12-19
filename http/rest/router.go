@@ -1,16 +1,20 @@
 package rest
 
-import "github.com/julienschmidt/httprouter"
+import (
+	"github.com/bobaekang/toy-api-go-httprouter/model"
+	"github.com/julienschmidt/httprouter"
+)
 
-func NewRouter() *httprouter.Router {
+func NewRouter(s model.Service) *httprouter.Router {
 	router := httprouter.New()
-	routes := allRoutes()
-	for _, r := range routes {
-		var handle httprouter.Handle
-		handle = logger(r.HandlerFunc)
 
-		router.Handle(r.Method, r.Path, handle)
-	}
+	handleIndex := logger(getIndex(s))
+	handleArrestsAll := logger(getArrestsAll(s))
+	handleArrestsByOffenseClass := logger(getArrestsByOffenseClass(s))
+
+	router.GET("/", handleIndex)
+	router.GET("/arrests", handleArrestsAll)
+	router.GET("/arrests/by-offense-class", handleArrestsByOffenseClass)
 
 	return router
 }

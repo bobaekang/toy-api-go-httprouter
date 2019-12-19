@@ -6,18 +6,27 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/bobaekang/toy-api-go-httprouter/model"
 )
 
-func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprintln(w, "Hello, World!")
+func getIndex(s model.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		fmt.Fprintln(w, "Hello, World!")
+	}
 }
 
-func arrestsIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	writeOKResponse(w, sampleDataArrestsAll)
+func getArrestsAll(s model.Service) func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		data := s.GetArrestsAll()
+		writeOKResponse(w, data)
+	}
 }
 
-func arrestsByOffenseClassPath(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	writeOKResponse(w, sampleDataArrestsByOffenseClass)
+func getArrestsByOffenseClass(s model.Service) func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	return func (w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		data := s.GetArrestsByOffenseClass()
+		writeOKResponse(w, data)
+	}
 }
 
 func writeOKResponse(w http.ResponseWriter, m interface{}) {
