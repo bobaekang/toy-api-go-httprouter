@@ -2,7 +2,7 @@ package rest
 
 import "github.com/bobaekang/toy-api-go-httprouter/model"
 
-var SampleDataArrestsAll = []model.ArrestsAll{
+var sampleDataArrestsAll = []model.ArrestsAll{
 	{
 		Year:  2017,
 		Value: 1820,
@@ -13,7 +13,7 @@ var SampleDataArrestsAll = []model.ArrestsAll{
 	},
 }
 
-var SampleDataArrestsByOffenseClass = []model.ArrestsByOffenseClass{
+var sampleDataArrestsByOffenseClass = []model.ArrestsByOffenseClass{
 	{
 		Year:         2017,
 		OffenseClass: 0,

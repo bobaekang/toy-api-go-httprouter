@@ -8,16 +8,16 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprintln(w, "Hello, World!")
 }
 
-func ArrestsIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	writeOKResponse(w, SampleDataArrestsAll)
+func arrestsIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	writeOKResponse(w, sampleDataArrestsAll)
 }
 
-func ArrestsByOffenseClassPath(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	writeOKResponse(w, SampleDataArrestsByOffenseClass)
+func arrestsByOffenseClassPath(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	writeOKResponse(w, sampleDataArrestsByOffenseClass)
 }
 
 func writeOKResponse(w http.ResponseWriter, m interface{}) {

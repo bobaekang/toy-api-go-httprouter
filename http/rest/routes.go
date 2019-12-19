@@ -15,19 +15,19 @@ func allRoutes() []Route {
 			"Index",
 			"GET",
 			"/",
-			Index,
+			index,
 		},
 		{
 			"ArrestsIndex",
 			"GET",
 			"/arrests",
-			ArrestsIndex,
+			arrestsIndex,
 		},
 		{
 			"ArrestsByOffenseClassPath",
 			"GET",
 			"/arrests/by-offense-class",
-			ArrestsByOffenseClassPath,
+			arrestsByOffenseClassPath,
 		},
 	}
 }
