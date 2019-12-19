@@ -8,5 +8,6 @@ This repository uses or takes inspirations from the following works:
 
 * [`corylanou/tns-restful-json-api`](https://github.com/corylanou/tns-restful-json-api) (See license text at NOTICE.txt)
 * [`gsingharoy/httprouter-tutorial`](https://github.com/gsingharoy/httprouter-tutorial) (See license text at NOTICE.txt)
+* [`katzien/go-structure-examples`](https://github.com/katzien/go-structure-examples) (See license text at NOTICE.txt)
 
 Thank you!
