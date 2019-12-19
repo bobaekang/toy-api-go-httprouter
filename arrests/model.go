@@ -1,11 +1,11 @@
-package model
+package arrests
 
-type ArrestsAll struct {
+type All struct {
 	Year  int `json:"year"`
 	Value int `json:"value"`
 }
 
-type ArrestsByOffenseClass struct {
+type ByOffenseClass struct {
 	Year         int `json:"year"`
 	OffenseClass int `json:"offenseclass"`
 	Value        int `json:"value"`

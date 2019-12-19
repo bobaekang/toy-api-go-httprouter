@@ -1,15 +1,15 @@
 package memory
 
-import "github.com/bobaekang/toy-api-go-httprouter/model"
+import "github.com/bobaekang/toy-api-go-httprouter/arrests"
 
 type Storage struct {
-	ArrestsAll            []model.ArrestsAll
-	ArrestsByOffenseClass []model.ArrestsByOffenseClass
+	ArrestsAll            []arrests.All
+	ArrestsByOffenseClass []arrests.ByOffenseClass
 }
 
 func NewStorage() *Storage {
 	s := new(Storage)
-	s.ArrestsAll = []model.ArrestsAll{
+	s.ArrestsAll = []arrests.All{
 		{
 			Year:  2017,
 			Value: 1820,
@@ -19,7 +19,7 @@ func NewStorage() *Storage {
 			Value: 1795,
 		},
 	}
-	s.ArrestsByOffenseClass = []model.ArrestsByOffenseClass{
+	s.ArrestsByOffenseClass = []arrests.ByOffenseClass{
 		{
 			Year:         2017,
 			OffenseClass: 0,
@@ -55,10 +55,10 @@ func NewStorage() *Storage {
 	return s
 }
 
-func (s *Storage) GetArrestsAll() []model.ArrestsAll {
+func (s *Storage) GetArrestsAll() []arrests.All {
 	return s.ArrestsAll
 }
 
-func (s *Storage) GetArrestsByOffenseClass() []model.ArrestsByOffenseClass {
+func (s *Storage) GetArrestsByOffenseClass() []arrests.ByOffenseClass {
 	return s.ArrestsByOffenseClass
 }
