@@ -5,17 +5,42 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/bobaekang/toy-api-go-httprouter/arrests"
 	"github.com/bobaekang/toy-api-go-httprouter/http/rest"
+	"github.com/bobaekang/toy-api-go-httprouter/storage/memory"
 	"github.com/bobaekang/toy-api-go-httprouter/storage/sqlite"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
-	conn := sqliteConnection("./database.db")
-	defer conn.Close()
+// StorageType defines available storage types
+type StorageType int
 
-	s := sqlite.NewStorage(conn)
-	router := rest.NewRouter(s)
+const (
+	// Memory will store data in memory
+	Memory StorageType = iota
+	// Sqlite will store data in SQLite .db file saved on disk
+	Sqlite
+)
+
+func main() {
+	storageType := Sqlite
+
+	var arrestsService arrests.Service
+
+	switch storageType {
+	case Memory:
+		s := memory.NewStorage()
+		arrestsService = arrests.NewService(s)
+
+	case Sqlite:
+		conn := sqliteConnection("./database.db")
+		defer conn.Close()
+
+		s := sqlite.NewStorage(conn)
+		arrestsService = arrests.NewService(s)
+	}
+
+	router := rest.NewRouter(arrestsService)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
