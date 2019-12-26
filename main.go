@@ -41,6 +41,7 @@ func main() {
 	}
 
 	router := rest.NewRouter(arrestsService)
+	log.Println("note: listing on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
