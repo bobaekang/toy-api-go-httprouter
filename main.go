@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"log"
 	"net/http"
 
@@ -12,27 +13,18 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// StorageType defines available storage types
-type StorageType int
-
-const (
-	// Memory will store data in memory
-	Memory StorageType = iota
-	// Sqlite will store data in SQLite .db file saved on disk
-	Sqlite
-)
-
 func main() {
-	storageType := Sqlite
+	storageType := flag.String("storage", "sqlite", "storage type [memory, sqlite]")
+	flag.Parse()
 
 	var arrestsService arrests.Service
 
-	switch storageType {
-	case Memory:
+	switch *storageType {
+	case "memory":
 		s := memory.NewStorage()
 		arrestsService = arrests.NewService(s)
 
-	case Sqlite:
+	case "sqlite":
 		conn := sqliteConnection("./database.db")
 		defer conn.Close()
 
