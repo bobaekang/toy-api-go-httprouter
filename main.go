@@ -8,18 +8,26 @@ import (
 
 	"github.com/bobaekang/toy-api-go-httprouter/arrests"
 	"github.com/bobaekang/toy-api-go-httprouter/http/rest"
+	"github.com/bobaekang/toy-api-go-httprouter/storage/cache"
 	"github.com/bobaekang/toy-api-go-httprouter/storage/memory"
 	"github.com/bobaekang/toy-api-go-httprouter/storage/sqlite"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	storageType := flag.String("storage", "sqlite", "storage type [memory, sqlite]")
+	storageType := flag.String("storage", "sqlite", "storage type [cache, memory, sqlite]")
 	flag.Parse()
 
 	var arrestsService arrests.Service
 
 	switch *storageType {
+	case "cache":
+		conn := sqliteConnection("./database.db")
+		defer conn.Close()
+
+		s := cache.NewStorage(conn)
+		arrestsService = arrests.NewService(s)
+
 	case "memory":
 		s := memory.NewStorage()
 		arrestsService = arrests.NewService(s)
