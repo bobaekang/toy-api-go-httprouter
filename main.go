@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/bobaekang/toy-api-go-httprouter/arrests"
 	"github.com/bobaekang/toy-api-go-httprouter/http/rest"
+	"github.com/bobaekang/toy-api-go-httprouter/records"
 	"github.com/bobaekang/toy-api-go-httprouter/storage/cache"
 	"github.com/bobaekang/toy-api-go-httprouter/storage/memory"
 	"github.com/bobaekang/toy-api-go-httprouter/storage/sqlite"
@@ -18,7 +18,7 @@ func main() {
 	storageType := flag.String("storage", "sqlite", "storage type [cache, memory, sqlite]")
 	flag.Parse()
 
-	var arrestsService arrests.Service
+	var recordsService records.Service
 
 	switch *storageType {
 	case "cache":
@@ -26,21 +26,21 @@ func main() {
 		defer conn.Close()
 
 		s := cache.NewStorage(conn)
-		arrestsService = arrests.NewService(s)
+		recordsService = records.NewService(s)
 
 	case "memory":
 		s := memory.NewStorage()
-		arrestsService = arrests.NewService(s)
+		recordsService = records.NewService(s)
 
 	case "sqlite":
 		conn := sqliteConnection("./database.db")
 		defer conn.Close()
 
 		s := sqlite.NewStorage(conn)
-		arrestsService = arrests.NewService(s)
+		recordsService = records.NewService(s)
 	}
 
-	router := rest.NewRouter(arrestsService)
+	router := rest.NewRouter(recordsService)
 	log.Println("note: listing on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

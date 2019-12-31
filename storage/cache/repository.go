@@ -2,63 +2,73 @@ package cache
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
-	"github.com/bobaekang/toy-api-go-httprouter/arrests"
+	"github.com/bobaekang/toy-api-go-httprouter/records"
 )
 
 type Storage struct {
 	db                    *sql.DB
-	ArrestsAll            []arrests.All
-	ArrestsByOffenseClass []arrests.ByOffenseClass
+	ArrestsAll            records.Records
+	ArrestsByOffenseClass records.Records
 }
 
 func NewStorage(db *sql.DB) *Storage {
 	s := new(Storage)
 	s.db = db
-	s.ArrestsAll = FetchArrestsAll(db)
-	s.ArrestsByOffenseClass = FetchArrestsByOffenseClass(db)
+	s.ArrestsAll = fetchTableFromDB(db, "ArrestsAll")
+	s.ArrestsByOffenseClass = fetchTableFromDB(db, "ArrestsByOffenseClass")
 
 	return s
 }
 
-func (s *Storage) GetArrestsAll() []arrests.All {
+func (s *Storage) GetArrestsAll() records.Records {
 	return s.ArrestsAll
 }
 
-func (s *Storage) GetArrestsByOffenseClass() []arrests.ByOffenseClass {
+func (s *Storage) GetArrestsByOffenseClass() records.Records {
 	return s.ArrestsByOffenseClass
 }
 
-func FetchArrestsAll(db *sql.DB) (aa []arrests.All) {
-	rows, err := db.Query("SELECT * FROM ArrestsAll")
+func fetchTableFromDB(db *sql.DB, table string) (aa records.Records) {
+	query := fmt.Sprintf("SELECT * FROM %s", table)
+	rows, err := db.Query(query)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer rows.Close()
 
-	for rows.Next() {
-		a := new(arrests.All)
-
-		if err = rows.Scan(&a.Year, &a.Value); err != nil {
-			log.Fatal(err)
-		}
-
-		aa = append(aa, *a)
+	cols, err := rows.Columns()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	return aa
-}
-
-func FetchArrestsByOffenseClass(db *sql.DB) (aa []arrests.ByOffenseClass) {
-	rows, err := db.Query("SELECT * FROM ArrestsByOffenseClass")
-	defer rows.Close()
-
 	for rows.Next() {
-		a := new(arrests.ByOffenseClass)
+		vv := make([]int, len(cols))
+		vvPtrs := make([]interface{}, len(cols))
 
-		if err = rows.Scan(&a.Year, &a.OffenseClass, &a.Value); err != nil {
+		for i := range vv {
+			vvPtrs[i] = &vv[i]
+		}
+
+		if err = rows.Scan(vvPtrs...); err != nil {
 			log.Fatal(err)
 		}
 
-		aa = append(aa, *a)
+		var groups []records.Group
+		var value int
+
+		for i, col := range cols {
+			if col != "value" {
+				groups = append(groups, records.Group{col, vv[i]})
+			} else {
+				value = vv[i]
+			}
+		}
+
+		aa = append(aa, records.Record{groups, value})
 	}
 
 	return aa

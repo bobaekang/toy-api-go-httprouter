@@ -2,9 +2,10 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
-	"github.com/bobaekang/toy-api-go-httprouter/arrests"
+	"github.com/bobaekang/toy-api-go-httprouter/records"
 )
 
 type Storage struct {
@@ -18,35 +19,52 @@ func NewStorage(db *sql.DB) *Storage {
 	return s
 }
 
-func (s *Storage) GetArrestsAll() (aa []arrests.All) {
-	rows, err := s.db.Query("SELECT * FROM ArrestsAll")
-	defer rows.Close()
-
-	for rows.Next() {
-		a := new(arrests.All)
-
-		if err = rows.Scan(&a.Year, &a.Value); err != nil {
-			log.Fatal(err)
-		}
-
-		aa = append(aa, *a)
-	}
-
-	return aa
+func (s *Storage) GetArrestsAll() (aa records.Records) {
+	return fetchTableFromDB(s.db, "ArrestsAll")
 }
 
-func (s *Storage) GetArrestsByOffenseClass() (aa []arrests.ByOffenseClass) {
-	rows, err := s.db.Query("SELECT * FROM ArrestsByOffenseClass")
+func (s *Storage) GetArrestsByOffenseClass() (aa records.Records) {
+	return fetchTableFromDB(s.db, "ArrestsByOffenseClass")
+}
+
+func fetchTableFromDB(db *sql.DB, table string) (aa records.Records) {
+	query := fmt.Sprintf("SELECT * FROM %s", table)
+	rows, err := db.Query(query)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer rows.Close()
 
-	for rows.Next() {
-		a := new(arrests.ByOffenseClass)
+	cols, err := rows.Columns()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		if err = rows.Scan(&a.Year, &a.OffenseClass, &a.Value); err != nil {
+	for rows.Next() {
+		vv := make([]int, len(cols))
+		vvPtrs := make([]interface{}, len(cols))
+
+		for i := range vv {
+			vvPtrs[i] = &vv[i]
+		}
+
+		if err = rows.Scan(vvPtrs...); err != nil {
 			log.Fatal(err)
 		}
 
-		aa = append(aa, *a)
+		var groups []records.Group
+		var value int
+
+		for i, col := range cols {
+			if col != "value" {
+				groups = append(groups, records.Group{col, vv[i]})
+			} else {
+				value = vv[i]
+			}
+		}
+
+		aa = append(aa, records.Record{groups, value})
 	}
 
 	return aa
