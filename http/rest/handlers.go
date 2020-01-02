@@ -5,24 +5,24 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/bobaekang/toy-api-go-httprouter/records"
+	"github.com/bobaekang/toy-api-go-httprouter/data"
 	"github.com/julienschmidt/httprouter"
 )
 
-func getIndex(s records.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func getIndex(s data.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		fmt.Fprintln(w, "Hello, World!")
 	}
 }
 
-func getArrestsAll(s records.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func getArrestsAll(s data.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		data := s.GetArrestsAll()
 		writeOKResponse(w, data)
 	}
 }
 
-func getArrestsByOffenseClass(s records.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func getArrestsByOffenseClass(s data.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		data := s.GetArrestsByOffenseClass()
 		writeOKResponse(w, data)

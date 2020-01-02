@@ -1,11 +1,11 @@
 package rest
 
 import (
-	"github.com/bobaekang/toy-api-go-httprouter/records"
+	"github.com/bobaekang/toy-api-go-httprouter/data"
 	"github.com/julienschmidt/httprouter"
 )
 
-func NewRouter(s records.Service) *httprouter.Router {
+func NewRouter(s data.Service) *httprouter.Router {
 	router := httprouter.New()
 
 	handleIndex := logger(getIndex(s))

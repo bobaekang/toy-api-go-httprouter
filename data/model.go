@@ -1,45 +1,45 @@
-package records
+package data
 
 import (
 	"bytes"
 	"encoding/json"
 )
 
-// Group models a group name-value pair
-type Group struct {
+// Variable models a variable name-value pair
+type Variable struct {
 	Name  string
 	Value int
 }
 
-// Record models a pairing of Groups and a value
-type Record struct {
-	Groups []Group
+// Row models a pairing of Variables and a value
+type Row struct {
+	Variables []Variable
 	Value  int
 }
 
-// Records models a collection of Records
-type Records []Record
+// Table models a collection of Rows
+type Table []Row
 
-// MarshalJSON implements custom JSON marshaler for Records
-func (aa Records) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements custom JSON marshaler for Table
+func (table Table) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 
 	buf.WriteString("[")
 
-	for i, a := range aa {
+	for i, row := range table {
 		if i != 0 {
 			buf.WriteString(",")
 		}
 
 		buf.WriteString("{")
 
-		// marshal Groups
-		for j, g := range a.Groups {
+		// marshal Variables
+		for j, variable := range row.Variables {
 			if j != 0 {
 				buf.WriteString(",")
 			}
 
-			err := writeJSONProp(&buf, g.Name, g.Value)
+			err := writeJSONProp(&buf, variable.Name, variable.Value)
 			if err != nil {
 				return nil, err
 			}
@@ -48,7 +48,7 @@ func (aa Records) MarshalJSON() ([]byte, error) {
 		buf.WriteString(",")
 
 		// marshal Value
-		err := writeJSONProp(&buf, "value", a.Value)
+		err := writeJSONProp(&buf, "value", row.Value)
 		if err != nil {
 			return nil, err
 		}
@@ -57,6 +57,7 @@ func (aa Records) MarshalJSON() ([]byte, error) {
 	}
 
 	buf.WriteString("]")
+	
 	return buf.Bytes(), nil
 }
 

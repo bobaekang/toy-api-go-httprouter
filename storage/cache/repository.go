@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/bobaekang/toy-api-go-httprouter/records"
+	"github.com/bobaekang/toy-api-go-httprouter/data"
 )
 
 type Storage struct {
 	db                    *sql.DB
-	ArrestsAll            records.Records
-	ArrestsByOffenseClass records.Records
+	ArrestsAll            data.Table
+	ArrestsByOffenseClass data.Table
 }
 
 func NewStorage(db *sql.DB) *Storage {
@@ -23,16 +23,16 @@ func NewStorage(db *sql.DB) *Storage {
 	return s
 }
 
-func (s *Storage) GetArrestsAll() records.Records {
+func (s *Storage) GetArrestsAll() data.Table {
 	return s.ArrestsAll
 }
 
-func (s *Storage) GetArrestsByOffenseClass() records.Records {
+func (s *Storage) GetArrestsByOffenseClass() data.Table {
 	return s.ArrestsByOffenseClass
 }
 
-func fetchTableFromDB(db *sql.DB, table string) (aa records.Records) {
-	query := fmt.Sprintf("SELECT * FROM %s", table)
+func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {
+	query := fmt.Sprintf("SELECT * FROM %s", tableName)
 	rows, err := db.Query(query)
 
 	if err != nil {
@@ -46,30 +46,30 @@ func fetchTableFromDB(db *sql.DB, table string) (aa records.Records) {
 	}
 
 	for rows.Next() {
-		vv := make([]int, len(cols))
-		vvPtrs := make([]interface{}, len(cols))
+		values := make([]int, len(cols))
+		valuesPtrs := make([]interface{}, len(cols))
 
-		for i := range vv {
-			vvPtrs[i] = &vv[i]
+		for i := range values {
+			valuesPtrs[i] = &values[i]
 		}
 
-		if err = rows.Scan(vvPtrs...); err != nil {
+		if err = rows.Scan(valuesPtrs...); err != nil {
 			log.Fatal(err)
 		}
 
-		var groups []records.Group
+		var variables []data.Variable
 		var value int
 
 		for i, col := range cols {
 			if col != "value" {
-				groups = append(groups, records.Group{col, vv[i]})
+				variables = append(variables, data.Variable{col, values[i]})
 			} else {
-				value = vv[i]
+				value = values[i]
 			}
 		}
 
-		aa = append(aa, records.Record{groups, value})
+		table = append(table, data.Row{variables, value})
 	}
 
-	return aa
+	return table
 }

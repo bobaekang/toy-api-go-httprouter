@@ -1,49 +1,49 @@
 package memory
 
 import (
-	"github.com/bobaekang/toy-api-go-httprouter/records"
+	"github.com/bobaekang/toy-api-go-httprouter/data"
 )
 
 type Storage struct {
-	ArrestsAll            records.Records
-	ArrestsByOffenseClass records.Records
+	ArrestsAll            data.Table
+	ArrestsByOffenseClass data.Table
 }
 
 func NewStorage() *Storage {
 	s := new(Storage)
-	s.ArrestsAll = records.Records{
+	s.ArrestsAll = data.Table{
 		{
-			Groups: []records.Group{{"year", 2017}},
+			Variables: []data.Variable{{"year", 2017}},
 			Value:  1820,
 		},
 		{
-			Groups: []records.Group{{"year", 2018}},
+			Variables: []data.Variable{{"year", 2018}},
 			Value:  1795,
 		},
 	}
-	s.ArrestsByOffenseClass = records.Records{
+	s.ArrestsByOffenseClass = data.Table{
 		{
-			Groups: []records.Group{{"year", 2017}, {"offenseclass", 0}},
+			Variables: []data.Variable{{"year", 2017}, {"offenseclass", 0}},
 			Value:  162,
 		},
 		{
-			Groups: []records.Group{{"year", 2017}, {"offenseclass", 1}},
+			Variables: []data.Variable{{"year", 2017}, {"offenseclass", 1}},
 			Value:  1277,
 		},
 		{
-			Groups: []records.Group{{"year", 2017}, {"offenseclass", 2}},
+			Variables: []data.Variable{{"year", 2017}, {"offenseclass", 2}},
 			Value:  81,
 		},
 		{
-			Groups: []records.Group{{"year", 2018}, {"offenseclass", 0}},
+			Variables: []data.Variable{{"year", 2018}, {"offenseclass", 0}},
 			Value:  421,
 		},
 		{
-			Groups: []records.Group{{"year", 2018}, {"offenseclass", 1}},
+			Variables: []data.Variable{{"year", 2018}, {"offenseclass", 1}},
 			Value:  1253,
 		},
 		{
-			Groups: []records.Group{{"year", 2018}, {"offenseclass", 2}},
+			Variables: []data.Variable{{"year", 2018}, {"offenseclass", 2}},
 			Value:  121,
 		},
 	}
@@ -51,10 +51,10 @@ func NewStorage() *Storage {
 	return s
 }
 
-func (s *Storage) GetArrestsAll() records.Records {
+func (s *Storage) GetArrestsAll() data.Table {
 	return s.ArrestsAll
 }
 
-func (s *Storage) GetArrestsByOffenseClass() records.Records {
+func (s *Storage) GetArrestsByOffenseClass() data.Table {
 	return s.ArrestsByOffenseClass
 }
