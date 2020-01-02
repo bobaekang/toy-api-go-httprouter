@@ -1,5 +1,10 @@
 package records
 
+import (
+	"bytes"
+	"encoding/json"
+)
+
 // Group models a group name-value pair
 type Group struct {
 	Name  string
@@ -12,26 +17,63 @@ type Record struct {
 	Value  int
 }
 
-// RecordMap models Record in the flattened map format
-type RecordMap map[string]int
-
 // Records models a collection of Records
 type Records []Record
 
-// Flatten wrangles Records into a slice of flat RecordMaps
-func (aa Records) Flatten() []RecordMap {
-	var recordMaps []RecordMap
+// MarshalJSON implements custom JSON marshaler for Records
+func (aa Records) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
 
-	for _, a := range aa {
-		recordMap := make(RecordMap)
+	buf.WriteString("[")
 
-		for _, g := range a.Groups {
-			recordMap[g.Name] = g.Value
+	for i, a := range aa {
+		if i != 0 {
+			buf.WriteString(",")
 		}
-		recordMap["value"] = a.Value
 
-		recordMaps = append(recordMaps, recordMap)
+		buf.WriteString("{")
+
+		// marshal Groups
+		for j, g := range a.Groups {
+			if j != 0 {
+				buf.WriteString(",")
+			}
+
+			err := writeJSONProp(&buf, g.Name, g.Value)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		buf.WriteString(",")
+
+		// marshal Value
+		err := writeJSONProp(&buf, "value", a.Value)
+		if err != nil {
+			return nil, err
+		}
+
+		buf.WriteString("}")
 	}
 
-	return recordMaps
+	buf.WriteString("]")
+	return buf.Bytes(), nil
+}
+
+func writeJSONProp(buf *bytes.Buffer, key string, val int) error {
+	k, err := json.Marshal(key)
+	if err != nil {
+		return err
+	}
+
+	v, err := json.Marshal(val)
+	if err != nil {
+		return err
+	}
+
+	buf.Write(k)
+	buf.WriteString(":")
+	buf.Write(v)
+
+	return nil
 }

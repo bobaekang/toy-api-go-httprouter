@@ -18,14 +18,14 @@ func getIndex(s records.Service) func(w http.ResponseWriter, r *http.Request, _ 
 func getArrestsAll(s records.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		data := s.GetArrestsAll()
-		writeOKResponse(w, data.Flatten())
+		writeOKResponse(w, data)
 	}
 }
 
 func getArrestsByOffenseClass(s records.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		data := s.GetArrestsByOffenseClass()
-		writeOKResponse(w, data.Flatten())
+		writeOKResponse(w, data)
 	}
 }
 
