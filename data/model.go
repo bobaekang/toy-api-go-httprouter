@@ -14,11 +14,50 @@ type Variable struct {
 // Row models a pairing of Variables and a value
 type Row struct {
 	Variables []Variable
-	Value  int
+	Value     int
 }
 
 // Table models a collection of Rows
 type Table []Row
+
+// Filter returns a new Table filtered with a specified condition
+func (table Table) Filter(by string, matchIf string, value int) Table {
+	for i := 0; i < len(table); i++ {
+		match := false
+
+		for _, v := range table[i].Variables {
+			switch matchIf {
+			case "==":
+				if v.Name == by && v.Value == value {
+					match = true
+				}
+			case "<=":
+				if v.Name == by && v.Value <= value {
+					match = true
+				}
+			case ">=":
+				if v.Name == by && v.Value >= value {
+					match = true
+				}
+			case "<":
+				if v.Name == by && v.Value < value {
+					match = true
+				}
+			case ">":
+				if v.Name == by && v.Value > value {
+					match = true
+				}
+			}
+		}
+
+		if !match {
+			table = append(table[:i], table[i+1:]...)
+			i--
+		}
+	}
+
+	return table
+}
 
 // MarshalJSON implements custom JSON marshaler for Table
 func (table Table) MarshalJSON() ([]byte, error) {
@@ -57,7 +96,7 @@ func (table Table) MarshalJSON() ([]byte, error) {
 	}
 
 	buf.WriteString("]")
-	
+
 	return buf.Bytes(), nil
 }
 
