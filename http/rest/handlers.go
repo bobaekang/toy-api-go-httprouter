@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/bobaekang/toy-api-go-httprouter/data"
 	"github.com/julienschmidt/httprouter"
@@ -18,14 +19,18 @@ func getIndex(s data.Service) func(w http.ResponseWriter, r *http.Request, _ htt
 func getArrestsAll(s data.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		data := s.GetArrestsAll()
-		writeOKResponse(w, data)
+		query := r.URL.Query()
+		queryResult := runQuery(data, query)
+		writeOKResponse(w, queryResult)
 	}
 }
 
 func getArrestsByOffenseClass(s data.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		data := s.GetArrestsByOffenseClass()
-		writeOKResponse(w, data)
+		query := r.URL.Query()
+		queryResult := runQuery(data, query)
+		writeOKResponse(w, queryResult)
 	}
 }
 
@@ -43,4 +48,24 @@ func writeErrorResponse(w http.ResponseWriter, errorCode int, errorMsg string) {
 	json.
 		NewEncoder(w).
 		Encode(&JSONErrorResponse{Error: &APIError{Status: errorCode, Title: errorMsg}})
+}
+
+func runQuery(table data.Table, query map[string][]string) data.Table {
+	if yearMin := query["yearMin"]; len(yearMin) > 0 {
+		value, err := strconv.Atoi(yearMin[0])
+		if err != nil {
+			return nil
+		}
+		table = table.Filter("year", ">=", value)
+	}
+
+	if yearMax := query["yearMax"]; len(yearMax) > 0 {
+		value, err := strconv.Atoi(yearMax[0])
+		if err != nil {
+			return nil
+		}
+		table = table.Filter("year", "<=", value)
+	}
+
+	return table
 }
