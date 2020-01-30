@@ -3,6 +3,7 @@ package data
 import (
 	"bytes"
 	"encoding/json"
+	"sort"
 )
 
 // Variable models a variable name-value pair
@@ -79,6 +80,40 @@ func (table Table) Select(varNames ...string) Table {
 	}
 
 	return selected
+}
+
+// SortBy returns a new sorted Table
+func (table Table) SortBy(by string, order string) Table {
+	sorted := table
+
+	sort.SliceStable(sorted, func(i, j int) bool {
+		var iVal, jVal int
+
+		for _, v := range sorted[i].Variables {
+			if v.Name == by {
+				iVal = v.Value
+			}
+		}
+
+		for _, v := range sorted[j].Variables {
+			if v.Name == by {
+				jVal = v.Value
+			}
+		}
+
+		var less bool
+
+		switch order {
+		case "asc":
+			less = iVal < jVal
+		case "desc":
+			less = iVal > jVal
+		}
+
+		return less
+	})
+
+	return sorted
 }
 
 // MarshalJSON implements custom JSON marshaler for Table
