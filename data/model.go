@@ -59,6 +59,28 @@ func (table Table) Filter(by string, matchIf string, value int) Table {
 	return table
 }
 
+// Select implements selecting Variables by name operation for Table type
+func (table Table) Select(varNames ...string) Table {
+	selected := make(Table, len(table))
+
+	for i := range table {
+		var selectedVars []Variable
+
+		for _, v := range table[i].Variables {
+			for _, varName := range varNames {
+				if v.Name == varName {
+					selectedVars = append(selectedVars, v)
+				}
+			}
+		}
+
+		selected[i].Variables = selectedVars
+		selected[i].Value = table[i].Value
+	}
+
+	return selected
+}
+
 // MarshalJSON implements custom JSON marshaler for Table
 func (table Table) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
