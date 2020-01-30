@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/bobaekang/toy-api-go-httprouter/data"
 	"github.com/julienschmidt/httprouter"
@@ -65,6 +66,10 @@ func runQuery(table data.Table, query map[string][]string) data.Table {
 			return nil
 		}
 		table = table.Filter("year", "<=", value)
+	}
+
+	if fields := query["variables"]; len(fields) > 0 {
+		table = table.Select(fields...)
 	}
 
 	return table
