@@ -68,6 +68,23 @@ func runQuery(table data.Table, query map[string][]string) data.Table {
 		table = table.Filter("year", "<=", value)
 	}
 
+	if sortBy := query["sortBy"]; len(sortBy) > 0 {
+		for _, s := range strings.Split(sortBy[0], " ") {
+			byOrder := strings.Split(s, ":")
+			by := byOrder[0]
+			order := "asc"
+
+			if len(byOrder) > 1 {
+				order = strings.ToLower(byOrder[1])
+				if order != "asc" && order != "desc" {
+					return nil
+				}
+			}
+
+			table = table.SortBy(by, order)
+		}
+	}
+
 	if fields := query["variables"]; len(fields) > 0 {
 		table = table.Select(fields...)
 	}
