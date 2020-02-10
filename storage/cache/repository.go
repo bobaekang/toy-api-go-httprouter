@@ -25,12 +25,8 @@ func NewStorage(db *sql.DB) *Storage {
 	return s
 }
 
-func (s *Storage) GetArrestsAll() data.Table {
-	return s.tables["ArrestsAll"]
-}
-
-func (s *Storage) GetArrestsByOffenseClass() data.Table {
-	return s.tables["ArrestsByOffenseClass"]
+func (s *Storage) GetTable(tableName string) data.Table {
+	return s.tables[tableName]
 }
 
 func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {

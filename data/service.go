@@ -2,8 +2,7 @@ package data
 
 // Repository provides access to arrests data storage.
 type Repository interface {
-	GetArrestsAll() Table
-	GetArrestsByOffenseClass() Table
+	GetTable(string) Table
 }
 
 // Service provides operations for arrests data.
@@ -23,10 +22,10 @@ func NewService(r Repository) Service {
 
 // GetArrestsAll returns arrests data.
 func (s *service) GetArrestsAll() Table {
-	return s.r.GetArrestsAll()
+	return s.r.GetTable("ArrestsAll")
 }
 
 // GetArrestsAll returns arrests by offense class data.
 func (s *service) GetArrestsByOffenseClass() Table {
-	return s.r.GetArrestsByOffenseClass()
+	return s.r.GetTable("ArrestsByOffenseClass")
 }

@@ -53,10 +53,6 @@ func NewStorage() *Storage {
 	return s
 }
 
-func (s *Storage) GetArrestsAll() data.Table {
-	return s.tables["ArrestsAll"]
-}
-
-func (s *Storage) GetArrestsByOffenseClass() data.Table {
-	return s.tables["ArrestsByOffenseClass"]
+func (s *Storage) GetTable(tableName string) data.Table {
+	return s.tables[tableName]
 }
