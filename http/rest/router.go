@@ -8,13 +8,9 @@ import (
 func NewRouter(s data.Service) *httprouter.Router {
 	router := httprouter.New()
 
-	handleIndex := logger(getIndex(s))
-	handleArrestsAll := logger(getArrestsAll(s))
-	handleArrestsByOffenseClass := logger(getArrestsByOffenseClass(s))
-
-	router.GET("/", handleIndex)
-	router.GET("/arrests", handleArrestsAll)
-	router.GET("/arrests/by-offense-class", handleArrestsByOffenseClass)
+	router.GET("/", logger(getIndex(s)))
+	router.GET("/arrests", logger(getArrestsAll(s)))
+	router.GET("/arrests/by-offense-class", logger(getArrestsByOffenseClass(s)))
 
 	return router
 }
