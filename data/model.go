@@ -13,10 +13,7 @@ type Variable struct {
 }
 
 // Row models a pairing of Variables and a value
-type Row struct {
-	Variables []Variable
-	Value     int
-}
+type Row []Variable
 
 // Table models a collection of Rows
 type Table []Row
@@ -26,7 +23,7 @@ func (table Table) Filter(by string, matchIf string, value int) Table {
 	for i := 0; i < len(table); i++ {
 		match := false
 
-		for _, v := range table[i].Variables {
+		for _, v := range table[i] {
 			switch matchIf {
 			case "==":
 				if v.Name == by && v.Value == value {
@@ -65,18 +62,17 @@ func (table Table) Select(varNames ...string) Table {
 	selected := make(Table, len(table))
 
 	for i := range table {
-		var selectedVars []Variable
+		var row Row
 
-		for _, v := range table[i].Variables {
+		for _, v := range table[i] {
 			for _, varName := range varNames {
 				if v.Name == varName {
-					selectedVars = append(selectedVars, v)
+					row = append(row, v)
 				}
 			}
 		}
 
-		selected[i].Variables = selectedVars
-		selected[i].Value = table[i].Value
+		selected[i] = row
 	}
 
 	return selected
@@ -89,13 +85,13 @@ func (table Table) SortBy(by string, order string) Table {
 	sort.SliceStable(sorted, func(i, j int) bool {
 		var iVal, jVal int
 
-		for _, v := range sorted[i].Variables {
+		for _, v := range sorted[i] {
 			if v.Name == by {
 				iVal = v.Value
 			}
 		}
 
-		for _, v := range sorted[j].Variables {
+		for _, v := range sorted[j] {
 			if v.Name == by {
 				jVal = v.Value
 			}
@@ -130,7 +126,7 @@ func (table Table) MarshalJSON() ([]byte, error) {
 		buf.WriteString("{")
 
 		// marshal Variables
-		for j, variable := range row.Variables {
+		for j, variable := range row {
 			if j != 0 {
 				buf.WriteString(",")
 			}
@@ -139,14 +135,6 @@ func (table Table) MarshalJSON() ([]byte, error) {
 			if err != nil {
 				return nil, err
 			}
-		}
-
-		buf.WriteString(",")
-
-		// marshal Value
-		err := writeJSONProp(&buf, "value", row.Value)
-		if err != nil {
-			return nil, err
 		}
 
 		buf.WriteString("}")

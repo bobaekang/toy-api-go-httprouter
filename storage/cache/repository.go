@@ -55,18 +55,13 @@ func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {
 			log.Fatal(err)
 		}
 
-		var variables []data.Variable
-		var value int
+		var row data.Row
 
 		for i, col := range cols {
-			if col != "value" {
-				variables = append(variables, data.Variable{col, values[i]})
-			} else {
-				value = values[i]
-			}
+			row = append(row, data.Variable{col, values[i]})
 		}
 
-		table = append(table, data.Row{variables, value})
+		table = append(table, row)
 	}
 
 	return table
