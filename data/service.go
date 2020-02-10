@@ -7,8 +7,7 @@ type Repository interface {
 
 // Service provides operations for arrests data.
 type Service interface {
-	GetArrestsAll() Table
-	GetArrestsByOffenseClass() Table
+	GetTable(string) Table
 }
 
 type service struct {
@@ -20,12 +19,7 @@ func NewService(r Repository) Service {
 	return &service{r}
 }
 
-// GetArrestsAll returns arrests data.
-func (s *service) GetArrestsAll() Table {
-	return s.r.GetTable("ArrestsAll")
-}
-
-// GetArrestsAll returns arrests by offense class data.
-func (s *service) GetArrestsByOffenseClass() Table {
-	return s.r.GetTable("ArrestsByOffenseClass")
+// GetTable returns a data for the given table name.
+func (s *service) GetTable(tableName string) Table {
+	return s.r.GetTable(tableName)
 }
