@@ -17,18 +17,9 @@ func getIndex(s data.Service) func(w http.ResponseWriter, r *http.Request, _ htt
 	}
 }
 
-func getArrestsAll(s data.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func getTable(s data.Service, tableName string) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		data := s.GetTable("ArrestsAll")
-		query := r.URL.Query()
-		queryResult := runQuery(data, query)
-		writeOKResponse(w, queryResult)
-	}
-}
-
-func getArrestsByOffenseClass(s data.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		data := s.GetTable("ArrestsByOffenseClass")
+		data := s.GetTable(tableName)
 		query := r.URL.Query()
 		queryResult := runQuery(data, query)
 		writeOKResponse(w, queryResult)
