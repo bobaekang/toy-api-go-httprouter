@@ -9,26 +9,28 @@ import (
 )
 
 type Storage struct {
-	db                    *sql.DB
-	ArrestsAll            data.Table
-	ArrestsByOffenseClass data.Table
+	db     *sql.DB
+	tables map[string]data.Table
 }
 
 func NewStorage(db *sql.DB) *Storage {
+	m := make(map[string]data.Table)
+	m["ArrestsAll"] = fetchTableFromDB(db, "ArrestsAll")
+	m["ArrestsByOffenseClass"] = fetchTableFromDB(db, "ArrestsByOffenseClass")
+
 	s := new(Storage)
 	s.db = db
-	s.ArrestsAll = fetchTableFromDB(db, "ArrestsAll")
-	s.ArrestsByOffenseClass = fetchTableFromDB(db, "ArrestsByOffenseClass")
+	s.tables = m
 
 	return s
 }
 
 func (s *Storage) GetArrestsAll() data.Table {
-	return s.ArrestsAll
+	return s.tables["ArrestsAll"]
 }
 
 func (s *Storage) GetArrestsByOffenseClass() data.Table {
-	return s.ArrestsByOffenseClass
+	return s.tables["ArrestsByOffenseClass"]
 }
 
 func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {

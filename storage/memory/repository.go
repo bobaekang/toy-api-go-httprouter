@@ -5,13 +5,12 @@ import (
 )
 
 type Storage struct {
-	ArrestsAll            data.Table
-	ArrestsByOffenseClass data.Table
+	tables map[string]data.Table
 }
 
 func NewStorage() *Storage {
-	s := new(Storage)
-	s.ArrestsAll = data.Table{
+	m := make(map[string]data.Table)
+	m["ArrestsAll"] = data.Table{
 		{
 			Variables: []data.Variable{{"year", 2017}},
 			Value:  1820,
@@ -21,7 +20,7 @@ func NewStorage() *Storage {
 			Value:  1795,
 		},
 	}
-	s.ArrestsByOffenseClass = data.Table{
+	m["ArrestsByOffenseClass"] = data.Table{
 		{
 			Variables: []data.Variable{{"year", 2017}, {"offenseclass", 0}},
 			Value:  162,
@@ -48,13 +47,16 @@ func NewStorage() *Storage {
 		},
 	}
 
+	s := new(Storage)
+	s.tables = m
+
 	return s
 }
 
 func (s *Storage) GetArrestsAll() data.Table {
-	return s.ArrestsAll
+	return s.tables["ArrestsAll"]
 }
 
 func (s *Storage) GetArrestsByOffenseClass() data.Table {
-	return s.ArrestsByOffenseClass
+	return s.tables["ArrestsByOffenseClass"]
 }
