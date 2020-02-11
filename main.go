@@ -23,9 +23,9 @@ func main() {
 	switch *storageType {
 	case "cache":
 		conn := sqliteConnection("./database.db")
-		defer conn.Close()
-
 		s := cache.NewStorage(conn)
+		conn.Close()
+
 		dataService = data.NewService(s)
 
 	case "memory":
