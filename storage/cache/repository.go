@@ -15,8 +15,9 @@ type Storage struct {
 
 func NewStorage(db *sql.DB) *Storage {
 	m := make(map[string]data.Table)
-	m["Arrests"] = fetchTableFromDB(db, "Arrests")
-	m["ArrestsByOffenseClass"] = fetchTableFromDB(db, "ArrestsByOffenseClass")
+	for _, tableName := range fetchTableNamesFromDB(db) {
+		m[tableName] = fetchTableFromDB(db, tableName)
+	}
 
 	s := new(Storage)
 	s.db = db
@@ -27,6 +28,25 @@ func NewStorage(db *sql.DB) *Storage {
 
 func (s *Storage) GetTable(tableName string) data.Table {
 	return s.tables[tableName]
+}
+
+func fetchTableNamesFromDB(db *sql.DB) []string {
+	rows, err := db.Query("SELECT name FROM sqlite_master WHERE type='table'")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var tableNames []string
+	for rows.Next() {
+		var name string
+		if err = rows.Scan(&name); err != nil {
+			log.Fatal(err)
+		}
+		tableNames = append(tableNames, name)
+	}
+
+	return tableNames
 }
 
 func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {
