@@ -63,13 +63,18 @@ func runQuery(table data.Table, query map[string][]string) data.Table {
 		for _, s := range strings.Split(sortBy[0], " ") {
 			byOrder := strings.Split(s, ":")
 			by := byOrder[0]
-			order := "asc"
 
-			if len(byOrder) > 1 {
+			var order string
+			switch len(byOrder) {
+			case 1:
+				order = "asc"
+			case 2:
 				order = strings.ToLower(byOrder[1])
 				if order != "asc" && order != "desc" {
 					return nil
 				}
+			default:
+				return nil
 			}
 
 			table = table.SortBy(by, order)
