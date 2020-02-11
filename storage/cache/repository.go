@@ -55,10 +55,9 @@ func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {
 			log.Fatal(err)
 		}
 
-		var row data.Row
-
+		row := make(data.Row, len(cols))
 		for i, col := range cols {
-			row = append(row, data.Variable{col, values[i]})
+			row[i] = data.Variable{col, values[i]}
 		}
 
 		table = append(table, row)

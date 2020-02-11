@@ -62,12 +62,11 @@ func (table Table) Select(varNames ...string) Table {
 	selected := make(Table, len(table))
 
 	for i := range table {
-		var row Row
-
+		row := make(Row, len(varNames))
 		for _, v := range table[i] {
-			for _, varName := range varNames {
+			for j, varName := range varNames {
 				if v.Name == varName {
-					row = append(row, v)
+					row[j] = v
 				}
 			}
 		}
