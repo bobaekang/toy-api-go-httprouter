@@ -9,7 +9,7 @@ func NewRouter(s data.Service) *httprouter.Router {
 	router := httprouter.New()
 
 	router.GET("/", logger(getIndex(s)))
-	router.GET("/arrests", logger(getTable(s, "ArrestsAll")))
+	router.GET("/arrests", logger(getTable(s, "Arrests")))
 	router.GET("/arrests/by-offense-class", logger(getTable(s, "ArrestsByOffenseClass")))
 
 	return router

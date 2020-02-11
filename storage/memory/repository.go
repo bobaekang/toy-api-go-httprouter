@@ -10,7 +10,7 @@ type Storage struct {
 
 func NewStorage() *Storage {
 	m := make(map[string]data.Table)
-	m["ArrestsAll"] = data.Table{
+	m["Arrests"] = data.Table{
 		{{"year", 2017}, {"value", 1820}},
 		{{"year", 2018}, {"value", 1795}},
 	}

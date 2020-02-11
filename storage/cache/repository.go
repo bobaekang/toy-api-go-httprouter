@@ -15,7 +15,7 @@ type Storage struct {
 
 func NewStorage(db *sql.DB) *Storage {
 	m := make(map[string]data.Table)
-	m["ArrestsAll"] = fetchTableFromDB(db, "ArrestsAll")
+	m["Arrests"] = fetchTableFromDB(db, "Arrests")
 	m["ArrestsByOffenseClass"] = fetchTableFromDB(db, "ArrestsByOffenseClass")
 
 	s := new(Storage)
