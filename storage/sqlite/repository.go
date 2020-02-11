@@ -24,9 +24,7 @@ func (s *Storage) GetTable(tableName string) data.Table {
 }
 
 func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {
-	query := fmt.Sprintf("SELECT * FROM %s", tableName)
-	rows, err := db.Query(query)
-
+	rows, err := db.Query(fmt.Sprintf("SELECT * FROM %s", tableName))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,7 +38,7 @@ func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {
 	for rows.Next() {
 		values := make([]int, len(cols))
 		valuesPtrs := make([]interface{}, len(cols))
-
+		
 		for i := range values {
 			valuesPtrs[i] = &values[i]
 		}
