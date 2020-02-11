@@ -12,7 +12,7 @@ type Variable struct {
 	Value int
 }
 
-// Row models a pairing of Variables and a value
+// Row models a collection of Variables
 type Row []Variable
 
 // Table models a collection of Rows
