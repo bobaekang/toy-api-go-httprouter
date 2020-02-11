@@ -26,6 +26,12 @@ func getTable(s data.Service, tableName string) func(w http.ResponseWriter, r *h
 	}
 }
 
+func getRefTable(s data.Service, tableName string) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		writeOKResponse(w, s.GetRefTable(tableName))
+	}
+}
+
 func writeOKResponse(w http.ResponseWriter, m interface{}) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)

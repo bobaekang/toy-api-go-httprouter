@@ -13,6 +13,7 @@ func toPath(tableName string) string {
 	path := re.ReplaceAllString(tableName, "-$1")
 	path = strings.Replace(path, "-", "/", 1)
 	path = strings.Replace(path, "-By", "/By", 1)
+	path = strings.Replace(path, "Ref-", "Ref/", 1)
 
 	return strings.ToLower(path)
 }
@@ -23,6 +24,7 @@ func NewRouter(s data.Service) *httprouter.Router {
 	router.GET("/", logger(getIndex(s)))
 	router.GET(toPath("Arrests"), logger(getTable(s, "Arrests")))
 	router.GET(toPath("ArrestsByOffenseClass"), logger(getTable(s, "ArrestsByOffenseClass")))
+	router.GET(toPath("RefOffenseClass"), logger(getRefTable(s, "RefOffenseClass")))
 
 	return router
 }

@@ -22,4 +22,14 @@ func TestToPath(t *testing.T) {
 			"\nexpected ", expected,
 		)
 	}
+
+	got = toPath("RefOffenseClass")
+	expected = "/ref/offense-class"
+	if got != expected {
+		t.Error(
+			"toPath:",
+			"\n     got ", got,
+			"\nexpected ", expected,
+		)
+	}
 }
