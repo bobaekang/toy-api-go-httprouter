@@ -161,3 +161,12 @@ func writeJSONProp(buf *bytes.Buffer, key string, val int) error {
 
 	return nil
 }
+
+// RefRow models a pairing of id and value
+type RefRow struct {
+	ID    int    `json:"id"`
+	Value string `json:"value"`
+}
+
+// RefTable models a collection of RefRows
+type RefTable []RefRow
