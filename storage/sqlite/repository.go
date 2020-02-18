@@ -9,19 +9,26 @@ import (
 )
 
 type Storage struct {
-	db        *sql.DB
-	tables    map[string]data.Table
-	refTables map[string]data.RefTable
+	db            *sql.DB
+	tables        map[string]data.Table
+	refTables     map[string]data.RefTable
+	tableNames    []string
+	refTableNames []string
 }
 
 func NewStorage(db *sql.DB) *Storage {
+	var tableNames []string
+	var refTableNames []string
 	mt := make(map[string]data.Table)
 	mr := make(map[string]data.RefTable)
+
 	for _, tableName := range fetchTableNamesFromDB(db) {
 		if tableName[:3] == "Ref" {
 			mr[tableName] = fetchRefTableFromDB(db, tableName)
+			refTableNames = append(refTableNames, tableName)
 		} else {
 			mt[tableName] = fetchTableFromDB(db, tableName)
+			tableNames = append(tableNames, tableName)
 		}
 	}
 
@@ -29,6 +36,8 @@ func NewStorage(db *sql.DB) *Storage {
 	s.db = db
 	s.tables = mt
 	s.refTables = mr
+	s.tableNames = tableNames
+	s.refTableNames = refTableNames
 
 	return s
 }
@@ -39,6 +48,14 @@ func (s *Storage) GetTable(tableName string) data.Table {
 
 func (s *Storage) GetRefTable(tableName string) data.RefTable {
 	return s.refTables[tableName]
+}
+
+func (s *Storage) GetTableNames() []string {
+	return s.tableNames
+}
+
+func (s *Storage) GetRefTableNames() []string {
+	return s.refTableNames
 }
 
 func fetchTableNamesFromDB(db *sql.DB) []string {

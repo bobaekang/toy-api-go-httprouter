@@ -5,8 +5,10 @@ import (
 )
 
 type Storage struct {
-	tables    map[string]data.Table
-	refTables map[string]data.RefTable
+	tables        map[string]data.Table
+	refTables     map[string]data.RefTable
+	tableNames    []string
+	refTableNames []string
 }
 
 func NewStorage() *Storage {
@@ -34,6 +36,8 @@ func NewStorage() *Storage {
 	s := new(Storage)
 	s.tables = mt
 	s.refTables = mr
+	s.tableNames = []string{"Arrests", "ArrestsByOffenseClass"}
+	s.refTableNames = []string{"RefOffenseClass"}
 
 	return s
 }
@@ -44,4 +48,12 @@ func (s *Storage) GetTable(tableName string) data.Table {
 
 func (s *Storage) GetRefTable(tableName string) data.RefTable {
 	return s.refTables[tableName]
+}
+
+func (s *Storage) GetTableNames() []string {
+	return s.tableNames
+}
+
+func (s *Storage) GetRefTableNames() []string {
+	return s.refTableNames
 }

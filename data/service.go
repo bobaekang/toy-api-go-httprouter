@@ -4,12 +4,16 @@ package data
 type Repository interface {
 	GetTable(string) Table
 	GetRefTable(string) RefTable
+	GetTableNames() []string
+	GetRefTableNames() []string
 }
 
 // Service provides operations for arrests data.
 type Service interface {
 	GetTable(string) Table
 	GetRefTable(string) RefTable
+	GetTableNames() []string
+	GetRefTableNames() []string
 }
 
 type service struct {
@@ -29,4 +33,14 @@ func (s *service) GetTable(tableName string) Table {
 // GetRefTable returns a reference for the given table name.
 func (s *service) GetRefTable(tableName string) RefTable {
 	return s.r.GetRefTable(tableName)
+}
+
+// GetTableNames returns a list of data table names.
+func (s *service) GetTableNames() []string {
+	return s.r.GetTableNames()
+}
+
+// GetRefTableNames returns a list of reference table names.
+func (s *service) GetRefTableNames() []string {
+	return s.r.GetRefTableNames()
 }
