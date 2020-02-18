@@ -9,22 +9,55 @@ import (
 )
 
 type Storage struct {
-	db *sql.DB
+	db        *sql.DB
+	tables    map[string]data.Table
+	refTables map[string]data.RefTable
 }
 
 func NewStorage(db *sql.DB) *Storage {
+	mt := make(map[string]data.Table)
+	mr := make(map[string]data.RefTable)
+	for _, tableName := range fetchTableNamesFromDB(db) {
+		if tableName[:3] == "Ref" {
+			mr[tableName] = fetchRefTableFromDB(db, tableName)
+		} else {
+			mt[tableName] = fetchTableFromDB(db, tableName)
+		}
+	}
+
 	s := new(Storage)
 	s.db = db
+	s.tables = mt
+	s.refTables = mr
 
 	return s
 }
 
 func (s *Storage) GetTable(tableName string) data.Table {
-	return fetchTableFromDB(s.db, tableName)
+	return s.tables[tableName]
 }
 
 func (s *Storage) GetRefTable(tableName string) data.RefTable {
-	return fetchRefTableFromDB(s.db, tableName)
+	return s.refTables[tableName]
+}
+
+func fetchTableNamesFromDB(db *sql.DB) []string {
+	rows, err := db.Query("SELECT name FROM sqlite_master WHERE type='table'")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var tableNames []string
+	for rows.Next() {
+		var name string
+		if err = rows.Scan(&name); err != nil {
+			log.Fatal(err)
+		}
+		tableNames = append(tableNames, name)
+	}
+
+	return tableNames
 }
 
 func fetchTableFromDB(db *sql.DB, tableName string) (table data.Table) {
