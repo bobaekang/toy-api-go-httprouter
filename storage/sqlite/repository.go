@@ -9,7 +9,6 @@ import (
 )
 
 type Storage struct {
-	db            *sql.DB
 	tables        map[string]data.Table
 	refTables     map[string]data.RefTable
 	tableNames    []string
@@ -33,7 +32,6 @@ func NewStorage(db *sql.DB) *Storage {
 	}
 
 	s := new(Storage)
-	s.db = db
 	s.tables = mt
 	s.refTables = mr
 	s.tableNames = tableNames
